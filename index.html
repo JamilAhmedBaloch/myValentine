@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -16,5 +16,166 @@
   </div>
 </div>
 <script src="script.js"></script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alveena, Will You Be My Valentine? ❤️</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes floating {
+            0% { transform: translateY(0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-100vh); opacity: 0; }
+        }
+
+        .heart {
+            position: absolute;
+            bottom: -50px;
+            font-size: 24px;
+            animation: floating 5s linear infinite;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 2s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-pink-100 flex flex-col items-center justify-center min-h-screen text-center relative overflow-hidden">
+
+    <!-- Floating Hearts -->
+    <div id="heartContainer"></div>
+
+    <!-- Main Message -->
+    <h1 class="text-5xl font-bold text-red-600 mb-4 fade-in">Alveena, Will You Be My Valentine? ❤️</h1>
+    
+    <!-- Countdown Timer -->
+    <p class="text-lg text-gray-800 mb-4 fade-in">
+        Countdown to Valentine's Day: <span id="countdown" class="font-semibold text-red-500 text-xl"></span>
+    </p>
+
+    <p class="text-lg text-gray-800 max-w-md fade-in">
+        You are my sunshine, my happiness, and my heart’s favorite song.  
+        I can't imagine a single day without you. 💖  
+    </p>
+
+    <!-- Proposal Button -->
+    <button id="loveBtn" class="mt-6 px-6 py-3 bg-red-500 text-white rounded-lg shadow-lg hover:bg-red-600 transition transform hover:scale-105 fade-in">
+        Click to Reveal My Heart! 💌
+    </button>
+
+    <!-- Hidden Love Message -->
+    <p id="hiddenMessage" class="hidden text-xl font-semibold text-red-700 mt-4 fade-in">
+        My love, every day with you is special, but I want this Valentine's Day to be extra magical.  
+        Will you be my Valentine? 💕  
+        <br>  
+        Forever yours, **Jameel**.
+    </p>
+
+    <!-- Confetti Effect -->
+    <canvas id="confettiCanvas" class="absolute top-0 left-0 w-full h-full pointer-events-none hidden"></canvas>
+
+    <script>
+        // Valentine's Day Countdown
+        function updateCountdown() {
+            const valentinesDate = new Date(new Date().getFullYear(), 1, 14); // Feb 14
+            const now = new Date();
+            const diff = valentinesDate - now;
+
+            if (diff < 0) {
+                document.getElementById("countdown").innerText = "It's Valentine's Day! 🎉💖";
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById("countdown").innerText = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Button Click Event
+        document.getElementById("loveBtn").addEventListener("click", function() {
+            document.getElementById("hiddenMessage").classList.remove("hidden");
+            startConfetti();
+        });
+
+        // Floating Hearts
+        function createHeart() {
+            const heart = document.createElement("div");
+            heart.innerHTML = "❤️";
+            heart.classList.add("heart");
+            document.body.appendChild(heart);
+
+            const size = Math.random() * 30 + 10;
+            heart.style.fontSize = `${size}px`;
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animationDuration = Math.random() * 3 + 3 + "s";
+
+            setTimeout(() => {
+                heart.remove();
+            }, 5000);
+        }
+
+        setInterval(createHeart, 300);
+
+        // Confetti Effect
+        function startConfetti() {
+            const canvas = document.getElementById("confettiCanvas");
+            canvas.classList.remove("hidden");
+            const ctx = canvas.getContext("2d");
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particles = [];
+            const colors = ["#FF69B4", "#FFD700", "#FF4500", "#DC143C", "#FF1493"];
+
+            function createParticles() {
+                for (let i = 0; i < 100; i++) {
+                    particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        color: colors[Math.floor(Math.random() * colors.length)],
+                        size: Math.random() * 5 + 2,
+                        speedX: Math.random() * 4 - 2,
+                        speedY: Math.random() * 4 - 1
+                    });
+                }
+            }
+
+            function animateConfetti() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach((p, i) => {
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.fill();
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+                    if (p.y > canvas.height) particles.splice(i, 1);
+                });
+
+                if (particles.length > 0) requestAnimationFrame(animateConfetti);
+                else canvas.classList.add("hidden");
+            }
+
+            createParticles();
+            animateConfetti();
+        }
+    </script>
+
 </body>
 </html>
